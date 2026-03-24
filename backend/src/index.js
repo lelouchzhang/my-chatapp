@@ -1,8 +1,9 @@
 import express from "express";
-import AuthRoutes from "./routes/auth.route.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./lib/db.js";
+import AuthRoutes from "./routes/auth.route.js";
+import MessageRoutes from "./routes/message.route.js";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.get("/", () => {
 });
 
 app.use("/api/auth", AuthRoutes);
+app.use("/api/message", MessageRoutes);
 
 app.listen(PORT, () => {
   connectDB();
