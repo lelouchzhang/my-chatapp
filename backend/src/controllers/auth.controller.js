@@ -133,12 +133,7 @@ export const updateProfile = async (req, res) => {
 
 export const checkAuthInfo = (req, res) => {
   try {
-    res.status(200).json({
-      _id: req.user._id,
-      email: req.user.email,
-      fullName: req.user.fullName,
-      profilePicture: req.user.profilePicture,
-    });
+    res.status(200).json(req.user);
   } catch (error) {
     console.log("Error in checkAuthInfos controller:", error);
     res.status(500).json({
