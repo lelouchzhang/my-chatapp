@@ -100,12 +100,23 @@ export const updateProfile = async (req, res) => {
       return res.status(400).json({ message: "Profile picture is required" });
     }
 
-    const { secure_url } = await cloudinary.uploader.upload(profilePicture);
+    // 验证 base64 图片格式
+    if (!profilePicture.startsWith("data:image/")) {
+      return res.status(400).json({ message: "Invalid image format" });
+    }
+
+    const { secure_url } = await cloudinary.uploader.upload(profilePicture, {
+      resource_type: "image",
+      max_bytes: 5 * 1024 * 1024, // 5MB limit
+    });
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { profilePicture: secure_url },
       { new: true }
     );
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
     res.status(200).json({
       _id: updatedUser._id,
       email: updatedUser.email,
@@ -120,13 +131,18 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-export const checkAuthInfos = (req, res) => {
+export const checkAuthInfo = (req, res) => {
   try {
-    res.status(200).json(req.user);
+    res.status(200).json({
+      _id: req.user._id,
+      email: req.user.email,
+      fullName: req.user.fullName,
+      profilePicture: req.user.profilePicture,
+    });
   } catch (error) {
-    console.log("Error in checkAuthStatus controller:", error);
+    console.log("Error in checkAuthInfos controller:", error);
     res.status(500).json({
-      message: "Server error in checkAuthStatus controller",
+      message: "Server error in checkAuthInfos controller",
     });
   }
 };

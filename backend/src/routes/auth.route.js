@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  checkAuthInfos,
+  checkAuthInfo,
   signin,
   signout,
   signup,
@@ -18,6 +18,6 @@ router.post("/logout", signout);
 
 router.put("/update-profile", protectRoute, updateProfile);
 
-router.get("/check", protectRoute, checkAuthInfos);
+router.get("/check", protectRoute, checkAuthInfo);
 
 export default router;
