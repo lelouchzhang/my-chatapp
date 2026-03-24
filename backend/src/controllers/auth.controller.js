@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/users.model.js";
 import { generateJWT } from "../lib/utils.js";
+import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async (req, res) => {
   const { email, fullName, password } = req.body;
@@ -90,4 +91,42 @@ export const signout = (req, res) => {
   }
 };
 
-export const updateProfile = async (req, res) => {};
+export const updateProfile = async (req, res) => {
+  try {
+    const { profilePicture } = req.body;
+    const userId = req.user._id;
+
+    if (!profilePicture) {
+      return res.status(400).json({ message: "Profile picture is required" });
+    }
+
+    const { secure_url } = await cloudinary.uploader.upload(profilePicture);
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePicture: secure_url },
+      { new: true }
+    );
+    res.status(200).json({
+      _id: updatedUser._id,
+      email: updatedUser.email,
+      fullName: updatedUser.fullName,
+      profilePicture: updatedUser.profilePicture,
+    });
+  } catch (error) {
+    console.log("Error in updateProfile controller:", error);
+    res.status(500).json({
+      message: "Server error in updateProfile controller",
+    });
+  }
+};
+
+export const checkAuthInfos = (req, res) => {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    console.log("Error in checkAuthStatus controller:", error);
+    res.status(500).json({
+      message: "Server error in checkAuthStatus controller",
+    });
+  }
+};
