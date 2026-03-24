@@ -44,6 +44,8 @@ export const signup = async (req, res) => {
       message: "Server error in signup controller",
     });
   }
+};
+export const signin = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
@@ -53,6 +55,7 @@ export const signup = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
+    // 登陆时更新jwt
     generateJWT(user._id, res);
     res.status(200).json({
       _id: user._id,
