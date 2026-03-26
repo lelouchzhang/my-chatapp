@@ -25,7 +25,7 @@ export const getDirectMessages = async (req, res) => {
         { senderId: senderId, receiverId: dmUserId },
         { senderId: dmUserId, receiverId: senderId },
       ],
-    });
+    }).sort({ createdAt: 1 });
     res.status(200).json(messages);
   } catch (error) {
     console.log("Error in getDirectMessages controller:", error);
@@ -44,7 +44,7 @@ export const sendDirectMessage = async (req, res) => {
       const uploadResponse = await cloudinary.uploader.upload(image);
       imageUrl = uploadResponse.secure_url;
     }
-    const newMessage = newMessage({
+    const newMessage = new Message({
       senderId,
       receiverId: dmUserId,
       text,
