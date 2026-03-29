@@ -1,5 +1,5 @@
 const AuthImagePattern = ({ title, subtitle }) => {
-  const imageUrl = "../../public/images/9.jpg";
+  const imageUrl = "/public/images/9.jpg";
 
   return (
     <div className="hidden lg:flex items-center justify-center bg-base-200 p-12">
