@@ -9,7 +9,7 @@ import SettingsPage from "./pages/SettingsPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import { useEffect } from "react";
 import { useAuthStore } from "./store/useAuthStore.js";
-import "./index.css";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -46,6 +46,7 @@ function App() {
           element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />}
         />
       </Routes>
+      <Toaster />
     </div>
   );
 }
